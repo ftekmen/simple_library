@@ -19,16 +19,27 @@ let validation = {
   duplicate: false
 };
 
+createBooksList();
+
+// event listener for form submit
 const form = document.querySelector('form');
 form.addEventListener('submit', (e) => {
   e.preventDefault();
   addBookToLibrary();
 });
 
+// event listener for instant book title check
 const bookTitleInput = document.querySelector('.name');
 bookTitleInput.addEventListener('input', (e) => {
   checkDuplicate(e.target.value);
 });
+
+// event listener for delete book
+const bookContainer = document.querySelector('main');
+bookContainer.addEventListener('click', (e) => {
+  removeBookFromLibrary(e);
+});
+
 
 function addBookToLibrary() {
   const bookTitle = document.querySelector('.name');
@@ -53,7 +64,7 @@ function checkIsEmpty(values) {
   const emptyMessage = document.querySelector('.details-modal-content .empty');
   emptyMessage.innerHTML = '';
 
-  validation.empty && (emptyMessage.innerHTML ='Fill all the fields please!');
+  validation.empty && (emptyMessage.innerHTML = 'Fill all the fields please!');
 }
 
 function checkDuplicate(value) {
@@ -67,12 +78,16 @@ function checkDuplicate(value) {
 
 function clearFields(fields) {
   fields.forEach(field => {
-    field.value = '';
+    if (field.type === 'text') {
+      field.value = '';
+    } else field.checked = false;
   });
 }
 
-function removeBookFromLibrary() {
-
+function removeBookFromLibrary(e) {
+  if (e.target && e.target.classList.value.includes('book__delete')) {
+    e.target.parentElement.remove();
+  };
 }
 
 function markBookAsRead() {
@@ -104,4 +119,3 @@ function createBooksList() {
   });
 }
 
-createBooksList();

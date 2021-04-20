@@ -26,10 +26,16 @@ main {
 }
 
 .book {
+  position: relative;
   border: 1px solid #ccc;
   padding: 1rem;
   margin: 5px;
   width: clamp(10rem, 15vw, 20rem);
+}
+.book__delete {
+  position: absolute;
+  top: 5px;
+  right: 5px;
 }
 
 /* Modal */
