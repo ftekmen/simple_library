@@ -1,22 +1,30 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap");
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 body {
   display: flex;
   flex-direction: column;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  height: 100vh;
+  background: #ffffff;
+}
+header {
+  display: flex;
+  padding: 5rem 0;
 }
 .title {
   font-weight: 700;
   font-size: 2rem;
-  padding: 2rem 0;
 }
-header, main {
+header,
+main {
   width: 80%;
   margin: 0 auto;
 }
@@ -25,17 +33,123 @@ main {
   flex-wrap: wrap;
 }
 
-.book {
+.book,
+details summary {
+  padding: 30px;
+  background: white;
+  border-radius: 5px;
+  width: 250px;
+  height: 300px;
+  display: flex;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   position: relative;
-  border: 1px solid #ccc;
-  padding: 1rem;
-  margin: 5px;
-  width: clamp(10rem, 15vw, 20rem);
+}
+.book:not(:last-child) {
+  margin: 0 25px 45px 0;
+}
+.book:after {
+  z-index: -1;
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 10px;
+  border-radius: 50%;
+  left: 0;
+  bottom: 20px;
+  box-shadow: 0 40px 40px rgba(0, 0, 0, 0.2);
+}
+.book .book-content {
+  margin: auto;
+  text-align: center;
+}
+.book h1 {
+  font-size: 1.5rem;
+}
+.book p {
+  display: block;
+  margin-bottom: 25px;
+}
+.book p small {
+  color: #4f2edc;
+  font-weight: 700;
+}
+.book a {
+  color: #69c6b8;
+  pointer-events: auto;
 }
 .book__delete {
   position: absolute;
   top: 5px;
   right: 5px;
+}
+
+/* Checkboxes */
+
+.toggle {
+  position: relative;
+  margin-left: 75px;
+  display: block;
+  width: 40px;
+  height: 20px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.toggle:before {
+  content: "";
+  position: relative;
+  top: 3px;
+  left: 3px;
+  width: 34px;
+  height: 14px;
+  display: block;
+  background: #9a9999;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+.toggle span {
+  margin-left: -75px;
+  position: absolute;
+  top: 0;
+}
+.toggle div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  display: block;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(154, 153, 153, 0.5);
+  transition: all 0.2s ease;
+}
+.toggle div:before {
+  content: "";
+  position: absolute;
+  display: block;
+  margin: -18px;
+  width: 56px;
+  height: 56px;
+  background: rgba(79, 46, 220, 0.5);
+  border-radius: 50%;
+  transform: scale(0);
+  opacity: 1;
+  pointer-events: none;
+}
+
+.readCbx:checked + .toggle:before {
+  background: #947ada;
+}
+.readCbx:checked + .toggle div {
+  background: #4f2edc;
+  transform: translateX(20px);
+  transition: all 0.2s cubic-bezier(0.8, 0.4, 0.3, 1.25), background 0.15s ease;
+  box-shadow: 0 3px 8px rgba(79, 46, 220, 0.2);
+}
+.readCbx:checked + .toggle div:before {
+  transform: scale(1);
+  opacity: 0;
+  transition: all 0.4s ease;
 }
 
 /* Modal */
@@ -55,6 +169,7 @@ main {
   max-height: 90vh;
   display: flex;
   flex-direction: column;
+  z-index: 3;
 }
 .details-modal .details-modal-close {
   align-items: center;
@@ -100,17 +215,24 @@ main {
   right: 0;
   left: 0;
   top: 0;
+  z-index: 2;
 }
 details[open] .details-modal-overlay {
   pointer-events: all;
   opacity: 0.5;
 }
+details.new-book {
+  display: none;
+}
 
 details summary {
   list-style: none;
-  position: absolute;
-  bottom: 3rem;
-  right: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #aaa;
+  font-size: 1rem;
+  cursor: pointer;
 }
 details summary:focus {
   outline: none;

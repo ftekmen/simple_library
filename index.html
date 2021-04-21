@@ -18,7 +18,7 @@
 
   </main>
 
-  <details>
+  <details class="new-book">
     <summary>
       <div class="button">
         New Book
@@ -55,11 +55,18 @@
 
   <template class="bookTemplate">
     <section class="book">
-      <div class="book__name"></div>
-      <div class="book__author"></div>
-      <div class="book__pages"></div>
-      <div class="book__read"></div>
-      <button class="book__delete">X</button>
+      <div class="book__content">
+        <h1 class="book__name"></h1>
+        <p class="book__author"><small></small></p>
+        <p class="book__pages"></p>
+        <div class="book__read">
+          <input type="checkbox" id="readCbx" class="readCbx" style="display:none" />
+          <label for="readCbx" class="toggle">
+            <div></div><span>Read</span>
+          </label>
+        </div>
+        <button class="book__delete">X</button>
+      </div>
     </section>
   </template>
 
