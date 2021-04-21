@@ -5,16 +5,13 @@ function Book(name, author, pages, is_read = false) {
   this.is_read = is_read;
 }
 
-let sampleBook = {
-  name: "The Hill We Climb: An Inaugural Poem for the Country",
-  author: "Amanda Gorman",
-  pages: 32,
-  is_read: false
-}
+let lastBookId = 1;
+
+const sampleBook = new Book("The Hill We Climb: An Inaugural Poem for the Country", "Amanda Gorman", 32, false);
 
 let library = [sampleBook];
 
-let validation = {
+const validation = {
   empty: false,
   duplicate: false
 };
@@ -35,11 +32,13 @@ bookTitleInput.addEventListener('input', (e) => {
 });
 
 // event listener for delete book
+// event is created on parent element while book elements are created dynamically
+// placing an event directly on dynamically created element does not run
+// event delegation
 const bookContainer = document.querySelector('main');
 bookContainer.addEventListener('click', (e) => {
   removeBookFromLibrary(e);
 });
-
 
 function addBookToLibrary() {
   const bookTitle = document.querySelector('.name');
@@ -61,7 +60,7 @@ function addBookToLibrary() {
 function checkIsEmpty(values) {
   validation.empty = values.some(value => !value);
 
-  const emptyMessage = document.querySelector('.details-modal-content .empty');
+  const emptyMessage = document.querySelector('.empty');
   emptyMessage.innerHTML = '';
 
   validation.empty && (emptyMessage.innerHTML = 'Fill all the fields please!');
@@ -70,7 +69,7 @@ function checkIsEmpty(values) {
 function checkDuplicate(value) {
   validation.duplicate = library.some(book => book.name === value);
 
-  const duplicateMessage = document.querySelector('.details-modal-content .duplicate');
+  const duplicateMessage = document.querySelector('.duplicate');
   duplicateMessage.innerHTML = '';
 
   validation.duplicate && (duplicateMessage.innerHTML = 'Book already exists!');
@@ -85,8 +84,11 @@ function clearFields(fields) {
 }
 
 function removeBookFromLibrary(e) {
-  if (e.target && e.target.classList.value.includes('book__delete')) {
-    e.target.parentElement.remove();
+  if (e.target && e.target.className === 'book__delete') {
+    const index = library.map(book => book.name).indexOf(e.target.parentElement.children[0].textContent);
+    index > -1 && library.splice(index, 1);
+
+    createBooksList();
   };
 }
 
@@ -94,17 +96,23 @@ function markBookAsRead() {
 
 }
 
-function createBookLayout(name, author, pages, is_read) {
+function createBookLayout(name, author, pages, is_read, lastBookId) {
   const template = document.querySelector('.bookTemplate');
 
   const clone = template.content.cloneNode(true);
-  const divs = clone.querySelectorAll('div');
+  const elements = clone.querySelectorAll('.book__content > *');
 
-  [...divs].map((div) => {
-    div.className === "book__name" && (div.textContent = name);
-    div.className === "book__author" && (div.textContent = author);
-    div.className === "book__pages" && (div.textContent = pages);
-    div.className === "book__read" && (div.textContent = is_read);
+  [...elements].map((element) => {
+    element.className === "book__name" && (element.textContent = name);
+    element.className === "book__author" && (element.firstChild.textContent = author);
+    element.className === "book__pages" && (element.textContent = pages + ' pages');
+
+    if (element.className === "book__read") {
+      let input = element.querySelector('input');
+      input.setAttribute('id', `readCbx${lastBookId}`);
+      element.querySelector('label').setAttribute('for', `readCbx${lastBookId}`);
+      input.checked = is_read;
+    }
   });
 
   return clone;
@@ -114,8 +122,13 @@ function createBooksList() {
   const main = document.querySelector('main');
   main.innerHTML = '';
 
-  const bookLayoutList = library.map((book) => {
-    main.appendChild(createBookLayout(book.name, book.author, book.pages, book.is_read));
+  library.map((book) => {
+    main.appendChild(createBookLayout(book.name, book.author, book.pages, book.is_read, lastBookId));
+    lastBookId++;
   });
+
+  const newBook = document.querySelector('details.new-book').cloneNode(true);
+  newBook.classList.remove('new-book');
+  main.appendChild(newBook);
 }
 
