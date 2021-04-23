@@ -7,9 +7,11 @@ function Book(name, author, pages, is_read = false) {
 
 let lastBookId = 1;
 
-const sampleBook = new Book("The Hill We Climb: An Inaugural Poem for the Country", "Amanda Gorman", 32, false);
+const sampleBook1 = new Book("The Hill We Climb: An Inaugural Poem for the Country", "Amanda Gorman", 32, true);
+const sampleBook2 = new Book("Atomic Habits: An Easy & Proven Way to Build Good Habits & Break Bad Ones", "James Clear", 320, false);
+const sampleBook3 = new Book("The Good Sister: A Novel", "Sally Hepworth", 313, false);
 
-let library = [sampleBook];
+let library = [sampleBook1, sampleBook2, sampleBook3];
 
 const validation = {
   empty: false,
@@ -44,7 +46,7 @@ function addBookToLibrary() {
   const bookTitle = document.querySelector('.name');
   const bookAuthor = document.querySelector('.author');
   const bookPages = document.querySelector('.pages');
-  const bookIsRead = document.querySelector('.is-read');
+  const bookIsRead = document.querySelector('.readCbx');
 
   checkIsEmpty([bookTitle.value, bookAuthor.value, bookPages.value]);
   if (validation.empty || validation.duplicate) return;
@@ -97,10 +99,10 @@ function markBookAsRead() {
 }
 
 function createBookLayout(name, author, pages, is_read, lastBookId) {
-  const template = document.querySelector('.bookTemplate');
+  const bookTemplate = document.querySelector('.bookTemplate');
 
-  const clone = template.content.cloneNode(true);
-  const elements = clone.querySelectorAll('.book__content > *');
+  const book = bookTemplate.content.cloneNode(true);
+  const elements = book.querySelectorAll('.book__content > *');
 
   [...elements].map((element) => {
     element.className === "book__name" && (element.textContent = name);
@@ -115,7 +117,7 @@ function createBookLayout(name, author, pages, is_read, lastBookId) {
     }
   });
 
-  return clone;
+  return book;
 }
 
 function createBooksList() {
@@ -126,9 +128,5 @@ function createBooksList() {
     main.appendChild(createBookLayout(book.name, book.author, book.pages, book.is_read, lastBookId));
     lastBookId++;
   });
-
-  const newBook = document.querySelector('details.new-book').cloneNode(true);
-  newBook.classList.remove('new-book');
-  main.appendChild(newBook);
 }
 

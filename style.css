@@ -7,6 +7,9 @@
   font-family: "Roboto", sans-serif;
 }
 
+html {
+  font-size: 18px;
+}
 body {
   display: flex;
   flex-direction: column;
@@ -18,28 +21,30 @@ body {
 header {
   display: flex;
   padding: 5rem 0;
+  align-items: center;
 }
 .title {
   font-weight: 700;
   font-size: 2rem;
+  margin-right: 2rem;
 }
 header,
 main {
   width: 80%;
   margin: 0 auto;
+  padding-bottom: 3rem;
 }
 main {
   display: flex;
   flex-wrap: wrap;
 }
 
-.book,
-details summary {
+.book {
   padding: 30px;
   background: white;
   border-radius: 5px;
-  width: 250px;
-  height: 300px;
+  width: max(300px, 18vw);
+  height: 350px;
   display: flex;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   position: relative;
@@ -79,8 +84,17 @@ details summary {
 }
 .book__delete {
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 0;
+  right: 0;
+  padding: 5px 10px;
+  background:none;
+  border: none;
+  font-size: 2rem;
+}
+@media screen and (max-width: 700px) {
+  .book {
+    width: 100%;
+  }
 }
 
 /* Checkboxes */
@@ -204,6 +218,23 @@ details summary {
   pointer-events: all;
   overflow: auto;
 }
+.details-modal-content label {
+  padding-left: 10px;
+}
+.addBookCbxLabel div {
+  left: 10px;
+}
+.details-modal-content input[type=text] {
+  width: 100%;
+  font-size: 1rem;
+  margin-bottom: 1em;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+input::placeholder {
+  color: #ccc;
+}
 
 .details-modal-overlay {
   transition: opacity 0.2s ease-out;
@@ -221,22 +252,41 @@ details[open] .details-modal-overlay {
   pointer-events: all;
   opacity: 0.5;
 }
-details.new-book {
-  display: none;
-}
 
-details summary {
+details summary, .details-modal-content button {
   list-style: none;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #aaa;
+  color: #eee;
+  background-color: #4f2edc;
   font-size: 1rem;
   cursor: pointer;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 5px;
 }
 details summary:focus {
   outline: none;
 }
 details summary::-webkit-details-marker {
   display: none;
+}
+
+.details-modal-content form {
+  position: relative;
+  padding-bottom: 20px;
+}
+.details-modal-content button {
+  position: absolute;
+  bottom: -10px;
+  right: 0;
+  padding: 12px 1rem;
+}
+.details-modal-content .messages {
+  color: #f00;
+  font-size: .9rem;
+}
+.details-modal-content .messages span {
+  display: block;
 }
