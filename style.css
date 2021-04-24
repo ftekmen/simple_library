@@ -13,8 +13,6 @@ html {
 body {
   display: flex;
   flex-direction: column;
-  perspective: 1000px;
-  transform-style: preserve-3d;
   height: 100vh;
   background: #ffffff;
 }
@@ -69,6 +67,7 @@ main {
 }
 .book h1 {
   font-size: 1.5rem;
+  margin-bottom: 5px;
 }
 .book p {
   display: block;
@@ -77,6 +76,7 @@ main {
 .book p small {
   color: #4f2edc;
   font-weight: 700;
+  font-size: .9rem;
 }
 .book a {
   color: #69c6b8;
@@ -90,6 +90,10 @@ main {
   background:none;
   border: none;
   font-size: 2rem;
+  cursor: pointer;
+}
+.book__delete:hover {
+  color: #777;
 }
 @media screen and (max-width: 700px) {
   .book {
@@ -175,7 +179,7 @@ main {
   left: 50%;
   max-width: 90%;
   pointer-events: none;
-  position: absolute;
+  position: fixed;
   top: 50%;
   transform: translate(-50%, -50%);
   width: 30em;
@@ -224,7 +228,7 @@ main {
 .addBookCbxLabel div {
   left: 10px;
 }
-.details-modal-content input[type=text] {
+.details-modal-content input[type=text], .details-modal-content input[type=number] {
   width: 100%;
   font-size: 1rem;
   margin-bottom: 1em;
@@ -240,6 +244,8 @@ input::placeholder {
   transition: opacity 0.2s ease-out;
   pointer-events: none;
   background: rgba(15, 23, 42, 0.8);
+  width: 100vw;
+  height: 100vh;
   position: fixed;
   opacity: 0;
   bottom: 0;
