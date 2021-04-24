@@ -11,7 +11,8 @@ const sampleBook1 = new Book("The Hill We Climb: An Inaugural Poem for the Count
 const sampleBook2 = new Book("Atomic Habits: An Easy & Proven Way to Build Good Habits & Break Bad Ones", "James Clear", 320, false);
 const sampleBook3 = new Book("The Good Sister: A Novel", "Sally Hepworth", 313, false);
 
-let library = [sampleBook1, sampleBook2, sampleBook3];
+
+let library = localStorage.getItem('library') ? JSON.parse(localStorage.getItem('library')) : [sampleBook1, sampleBook2, sampleBook3];
 
 const validation = {
   empty: false,
@@ -39,7 +40,11 @@ bookTitleInput.addEventListener('input', (e) => {
 // event delegation
 const bookContainer = document.querySelector('main');
 bookContainer.addEventListener('click', (e) => {
-  removeBookFromLibrary(e);
+  if (e.target && e.target.className === 'book__delete') {
+    removeBookFromLibrary(e);
+  } else if (e.target && e.target.className === 'readCbx') {
+    markBookAsRead(e);
+  }
 });
 
 function addBookToLibrary() {
@@ -53,6 +58,7 @@ function addBookToLibrary() {
 
   const newBook = new Book(bookTitle.value, bookAuthor.value, bookPages.value, bookIsRead.checked);
   library.push(newBook);
+  localStorage.setItem('library', JSON.stringify(library));
 
   clearFields([bookTitle, bookAuthor, bookPages, bookIsRead]);
 
@@ -79,23 +85,24 @@ function checkDuplicate(value) {
 
 function clearFields(fields) {
   fields.forEach(field => {
-    if (field.type === 'text') {
+    if (field.type === 'text' || field.type === 'number') {
       field.value = '';
     } else field.checked = false;
   });
 }
 
 function removeBookFromLibrary(e) {
-  if (e.target && e.target.className === 'book__delete') {
-    const index = library.map(book => book.name).indexOf(e.target.parentElement.children[0].textContent);
-    index > -1 && library.splice(index, 1);
+  const index = library.map(book => book.name).indexOf(e.target.parentElement.children[0].textContent);
+  index > -1 && library.splice(index, 1);
+  localStorage.setItem('library', JSON.stringify(library));
 
-    createBooksList();
-  };
+  createBooksList();
 }
 
-function markBookAsRead() {
-
+function markBookAsRead(e) {
+  const index = library.map(book => book.name).indexOf(e.target.closest('.book').querySelector('.book__name').textContent);
+  index > -1 && (library[index].is_read = e.target.closest('.book').querySelector('.readCbx').checked);
+  localStorage.setItem('library', JSON.stringify(library));
 }
 
 function createBookLayout(name, author, pages, is_read, lastBookId) {
@@ -124,7 +131,11 @@ function createBooksList() {
   const main = document.querySelector('main');
   main.innerHTML = '';
 
-  library.map((book) => {
+  console.log(!localStorage.getItem('library'));
+  !localStorage.getItem('library') && localStorage.setItem('library', JSON.stringify(library));
+  const localStorageLibrary = JSON.parse(localStorage.getItem('library'));
+
+  localStorageLibrary.map((book) => {
     main.appendChild(createBookLayout(book.name, book.author, book.pages, book.is_read, lastBookId));
     lastBookId++;
   });
