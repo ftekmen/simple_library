@@ -31,7 +31,7 @@ form.addEventListener('submit', (e) => {
 // event listener for instant book title check
 const bookTitleInput = document.querySelector('.name');
 bookTitleInput.addEventListener('input', (e) => {
-  checkDuplicate(e.target.value);
+  validate('duplicate', e.target.value);
 });
 
 // event listener for delete book
@@ -53,7 +53,7 @@ function addBookToLibrary() {
   const bookPages = document.querySelector('.pages');
   const bookIsRead = document.querySelector('.readCbx');
 
-  checkIsEmpty([bookTitle.value, bookAuthor.value, bookPages.value]);
+  validate('empty', [bookTitle.value, bookAuthor.value, bookPages.value]);
   if (validation.empty || validation.duplicate) return;
 
   const newBook = new Book(bookTitle.value, bookAuthor.value, bookPages.value, bookIsRead.checked);
@@ -65,22 +65,17 @@ function addBookToLibrary() {
   createBooksList();
 }
 
-function checkIsEmpty(values) {
-  validation.empty = values.some(value => !value);
+function validate(type, data) {
+  const message = document.querySelector(`.${type}`);
+  message.innerHTML = '';
 
-  const emptyMessage = document.querySelector('.empty');
-  emptyMessage.innerHTML = '';
-
-  validation.empty && (emptyMessage.innerHTML = 'Fill all the fields please!');
-}
-
-function checkDuplicate(value) {
-  validation.duplicate = library.some(book => book.name === value);
-
-  const duplicateMessage = document.querySelector('.duplicate');
-  duplicateMessage.innerHTML = '';
-
-  validation.duplicate && (duplicateMessage.innerHTML = 'Book already exists!');
+  if (type === 'duplicate') {
+    validation.duplicate = library.some(book => book.name === data);
+    validation.duplicate && (message.innerHTML = 'Book already exists!');
+  } else if (type === 'empty') {
+    validation.empty = data.some(value => !value);
+    validation.empty && (message.innerHTML = 'Fill all the fields please!');
+  }
 }
 
 function clearFields(fields) {
