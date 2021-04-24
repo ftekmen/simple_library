@@ -33,22 +33,19 @@ main {
   padding-bottom: 3rem;
 }
 main {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(17rem, 100%), 1fr));
+  gap: 3rem 1rem;
 }
 
 .book {
   padding: 30px;
   background: white;
   border-radius: 5px;
-  width: max(300px, 18vw);
   height: 350px;
   display: flex;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   position: relative;
-}
-.book:not(:last-child) {
-  margin: 0 25px 45px 0;
 }
 .book:after {
   z-index: -1;
